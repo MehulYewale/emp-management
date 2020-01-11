@@ -1,0 +1,12 @@
+ /* react-router package can be removed if not required */
+// we can create as one table components which will have all the header and row configuration
+Json server -- json-server --port 4000 data.json
+we can add  " && json-server --port 4000 json_data/data.json" in npm start cmd inside package.json
+ 
+ Home --> 
+ companyId, company name, Info, address, establishedOn,  CEO, employeeCount, News
+ Add/Edit/Delete
+
+ creatte release tag while committing
+ 
+

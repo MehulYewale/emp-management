@@ -82,7 +82,7 @@ class AddEditEmp extends Component {
              <h3 className="text-center">Add/Edit Employee </h3>
              <div className="container">
                 <form>
-                    {this.props.match.params.empId && <div className="form-group">
+                    {this.props.match.params.empId && <div className="form-group font-weight-bold">
                         <label>Id : {this.props.match.params.empId || 'New'} </label>
                     </div>}
                     <div className="form-group">

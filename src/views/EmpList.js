@@ -13,6 +13,12 @@ const EmpColumn = (props) => (
     </div>
 );
 
+const LinkColumn = (props) => (
+    <div className="col-sm">
+        <NavLink to={"/employees/view/" + props.linkId}> <u>{props.value}</u></NavLink>
+    </div>
+);
+
 const RowActions = (props) => {
     let editUrl = '/employees/add-edit-employee/' + props.rowData.id;
     return <div className="col-sm">
@@ -27,12 +33,13 @@ const EmpTableRows = (props) => {
     return props.employees.map((emp, index) => {
         var objKeys = Object.keys(emp), rowDataTemplate = [];
         objKeys.forEach((key, index) => {
-            // if (key === 'name') {   // it will not work as expected due to childrens objects 
-            //     rowDataTemplate.push(empColumn(emp[key],'', index));
-            // } else {
-            //     rowDataTemplate.push(empColumn(emp[key],'', index));
-            // }
-            rowDataTemplate.push(<EmpColumn value={emp[key]} classes="" key={index + 1}></EmpColumn>); //it will create element instead of object
+            if (key === 'name') {
+                rowDataTemplate.push(<LinkColumn value={emp[key]} linkId={emp.id} classes="" key={index + 1}></LinkColumn>); 
+                // rowDataTemplate.push(empColumn(emp[key],'', index)); // it will not work as expected due to childrens objects 
+            } else {
+                // rowDataTemplate.push(empColumn(emp[key],'', index)); // it will not work as expected due to childrens objects 
+                rowDataTemplate.push(<EmpColumn value={emp[key]} classes="" key={index + 1}></EmpColumn>); //it will create element instead of object
+            }
         });
         return <div className="row" key={emp.id.toString()}>
             {rowDataTemplate} 
@@ -44,6 +51,7 @@ const EmpTableRows = (props) => {
 
 class EmpList extends Component {
 
+    list = [];
     constructor(props) {
         super(props);
         this.state = { 
@@ -55,12 +63,13 @@ class EmpList extends Component {
           ]
         };
     }
-
+    
     componentDidMount() {
         fetch("http://localhost:4000/employees")
           .then(res => res.json())
           .then(
             (result) => {
+              this.list = [...result];
               this.setState({
                 isLoaded: true,
                 employees: result
@@ -110,8 +119,18 @@ class EmpList extends Component {
         );
     }
 
+    searchFilter = (searchString) => {
+        this.setState({ employees: this.list.filter(obj => {
+            return Object.values(obj).some(val => {
+                // val = "" + val; // convert to string
+                return (!searchString) ? true : val.toString().includes(searchString);                        
+                });
+            })
+        });
+    }
+
     render() {
-        const tableHeaders = ['Emp_Id', 'Name', 'Address', 'Phone_Number', 'Salary', 'Actions'];
+        const tableHeaders = ['Name', 'Address', 'Phone_Number', 'Salary', 'Emp_Id', 'Actions'];
         const tableHeaderTemplate = tableHeaders.map((headerName, index) => 
             empColumn(headerName, '' , index + 1)
         );
@@ -135,10 +154,16 @@ class EmpList extends Component {
             <h4 className="text-center"> List of Employees</h4>
             <div className="container">
                 <div className="row"> 
-                <div className="col-sm">
+                    <div className="col-sm">
                         <NavLink to="/employees/add-edit-employee"> <button className="fa fa-plus">Add Employee </button></NavLink>
                     </div>
+                    <div className="col-sm">
+                    {/*  Create new component */}
+                        <input type="text" className="form-control" onChange={(event) => this.searchFilter(event.target.value)} 
+                            placeholder="Search here"/>
+                    </div>
                 </div>
+                <br/>
                 <div className="row">
                     {tableHeaderTemplate}
                 </div>

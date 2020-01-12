@@ -37,9 +37,9 @@ class BaseRouters extends Component {
             <Route path="/home/:name" component={Home} />
             <Route path="/employees/add-edit-employee/:empId" component={AddEditEmp} />
             <Route path="/employees/add-edit-employee" component={AddEditEmp} />
+            <Route path="/employees/view/:empId" component={ViewEmp} />
             {/* if we have child url path like /employees/add then will have to put that befoer parent...eg: above  */}
             <Route path="/employees" component={EmpList} />
-            <Route path="/view-employee" component={ViewEmp} />
 
 
             {/* <Redirect to="/jsx" /> */}

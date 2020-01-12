@@ -5,7 +5,8 @@ we can add  " && json-server --port 4000 json_data/data.json" in npm start cmd i
  
  Home --> 
  companyId, company name, Info, address, establishedOn,  CEO, employeeCount, News
- Add/Edit/Delete
+search, view
+Add/Edit/Delete
 
  creatte release tag while committing
  

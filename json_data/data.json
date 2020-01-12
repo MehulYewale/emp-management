@@ -13,20 +13,6 @@
       "id": 101
     },
     {
-      "id": 102,
-      "name": "AJay",
-      "address": "Kune",
-      "mobileNumber": "44232",
-      "salary": 20000
-    },
-    {
-      "id": 103,
-      "name": "VJay",
-      "address": "June",
-      "mobileNumber": "44444",
-      "salary": 10000
-    },
-    {
       "name": "SanJay",
       "address": "Mune",
       "mobileNumber": "66666666",
@@ -41,25 +27,11 @@
       "id": 105
     },
     {
-      "name": "",
-      "address": "",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 106
-    },
-    {
       "name": "ddfsdfds",
       "address": "hjgjj",
       "mobileNumber": "6868768",
       "salary": "hggjh",
       "id": 107
-    },
-    {
-      "name": "sssfsf",
-      "address": "ffsd",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 109
     },
     {
       "name": "Jay",
@@ -69,25 +41,11 @@
       "id": 110
     },
     {
-      "name": "ddfsdfdsqwewqe",
-      "address": "",
+      "name": "fsdfdsfsdfsf",
+      "address": "sfs",
       "mobileNumber": "",
       "salary": "",
       "id": 111
-    },
-    {
-      "name": "ssadda",
-      "address": "",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 114
-    },
-    {
-      "name": "jjhhj",
-      "address": "",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 115
     }
   ]
 }

@@ -6,7 +6,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="emp-app">
+      <div className="emp-app container position-relative">
           <BaseRouters></BaseRouters>
       </div>
     );

@@ -46,7 +46,7 @@ class AddEditEmp extends Component {
 
     onSubmitAction = () => {
         if(!this.employee.name.value) {
-            this.showToastMsg('danger', "Please Enter Name");
+            this.showToastMsg("Please Enter Name", 'danger');
             return;
         } 
         let url = "http://localhost:4000/employees",
@@ -72,12 +72,12 @@ class AddEditEmp extends Component {
         .then(
           (result) => {
                 if(!this.props.match.params.empId) {
-                    this.showToastMsg('success', "Added Succssfully!");
+                    this.showToastMsg("Added Succssfully!", 'success');
                         setTimeout(() => {
                             this.props.history.push('/employees');
-                        }, 3000);
+                        }, 2000);
                 } else {
-                    this.showToastMsg('success', "Updated Succssfully!");
+                    this.showToastMsg("Updated Succssfully!", 'success');
                 }
           },
           (error) => {
@@ -85,21 +85,13 @@ class AddEditEmp extends Component {
           }
         )
     }
-    showToastMsg = (type, msg, delayTime = 3000) => {
+    showToastMsg = (msg, type) => {
         this.toastProps = {
             showMsg: true,
-            type: type,
-            message: msg,
-            closeAction: () => {
-                this.toastProps.showMsg = false;
-                this.setState({showMsg : false});
-            }
-            
+            msgType: type,
+            message: msg
         }
         this.setState({showMsg : true});
-        setTimeout(() => {
-            this.toastProps.closeAction();
-        }, delayTime);
     }
 
     render(props) {
@@ -107,8 +99,7 @@ class AddEditEmp extends Component {
         return <div>
              <h3 className="text-center">Add/Edit Employee </h3>
              <div className="container">
-                <ToastMsg {...this.toastProps}></ToastMsg>
-
+                { this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
                 <form>
                     {this.props.match.params.empId && <div className="form-group font-weight-bold">
                         <label>Id : {this.props.match.params.empId || 'New'} </label>

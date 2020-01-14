@@ -109,14 +109,17 @@ class EmpList extends Component {
         }).then(response => response.json())
         .then(
             (result) => {
-                this.showToastMsg('success', 'Deleted successfully!');
+                this.showToastMsg('Deleted successfully!', 'success');
                 this.setState(prevState => {
-                    return { employees: prevState.employees.filter(value => value.id !== id) };
+                    return { 
+                        employees: prevState.employees.filter(value => value.id !== id),
+                        showMsg: true 
+                    };
                 });
             },
             (error) => {
                 console.log(error);
-                this.showToastMsg('danger', 'Failed to delete!');
+                this.showToastMsg('Failed to delete!', 'danger');
             }
         );
     }
@@ -131,19 +134,12 @@ class EmpList extends Component {
         });
     }
 
-    showToastMsg = (type, msg, delayTime = 3000) => {
+    showToastMsg = (msg, msgType) => {
         this.toastProps = {
             showMsg: true,
-            type: type,
-            message: msg,
-            closeAction: () => {
-                this.toastProps.showMsg = false;
-                this.setState({showMsg : false});
-            }
+            msgType,
+            message: msg
         }
-        setTimeout(() => {
-            this.toastProps.closeAction();
-        }, delayTime);
     }
 
     render() {
@@ -170,7 +166,7 @@ class EmpList extends Component {
         return <div>
             <h4 className="text-center"> List of Employees</h4>
             <div className="container">
-                <ToastMsg {...this.toastProps}></ToastMsg>
+                {this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
                 <div className="row"> 
                     <div className="col-sm">
                         <NavLink to="/employees/add-edit-employee"> <button className="fa fa-plus btn btn-primary"> Add Employee</button></NavLink>

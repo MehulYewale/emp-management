@@ -41,7 +41,6 @@ class BaseRouters extends Component {
             {/* if we have child url path like /employees/add then will have to put that befoer parent...eg: above  */}
             <Route path="/employees" component={EmpList} />
 
-
             {/* <Redirect to="/jsx" /> */}
             {/* Redirect works for wrong path as well so following Route will not work */}
             {/* <Route

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
+import ToastMsg from "../components/ToastMsg";
 
 const empColumn = (value, classes, index) => (
     <div className="col-sm font-weight-bold" key={index.toString()}>
@@ -22,8 +23,8 @@ const LinkColumn = (props) => (
 const RowActions = (props) => {
     let editUrl = '/employees/add-edit-employee/' + props.rowData.id;
     return <div className="col-sm">
-        <NavLink to={editUrl}><button className="fa fa-edit">Edit</button></NavLink>
-        <button onClick={() => props.deleteAction(props.rowData.id)} className="fa fa-trash">Delete</button> 
+        <NavLink to={editUrl}><button className="fa fa-edit btn p-0 mr-3" title="Edit"></button></NavLink> 
+        <button onClick={() => props.deleteAction(props.rowData.id)} className="fa fa-trash btn p-0" title="Delete"></button> 
         {/* not working as there render cycle fails  */}
     </div>;
 };
@@ -60,7 +61,8 @@ class EmpList extends Component {
             // { id: 102, name: 'AJay', address: 'Kune', mobileNumber: '44232', salary: 20000 },
             // { id: 103, name: 'VJay', address: 'June', mobileNumber: '44444', salary: 10000 },
             // { id: 104, name: 'SanJay', address: 'Mune', mobileNumber: '666666', salary: 12000 }
-          ]
+          ],
+          showMsg : false
         };
     }
     
@@ -99,9 +101,6 @@ class EmpList extends Component {
     }
 
     deleteEmployee = (id) => {
-       this.setState(prevState => {
-           return { employees: prevState.employees.filter(value => value.id !== id) };
-       });
        fetch("http://localhost:4000/employees/" + id, {
             method: 'DELETE',
             headers: {
@@ -110,11 +109,14 @@ class EmpList extends Component {
         }).then(response => response.json())
         .then(
             (result) => {
-              alert('Deleted Successfully');                
+                this.showToastMsg('success', 'Deleted successfully!');
+                this.setState(prevState => {
+                    return { employees: prevState.employees.filter(value => value.id !== id) };
+                });
             },
             (error) => {
                 console.log(error);
-                alert('Failed to delete');
+                this.showToastMsg('danger', 'Failed to delete!');
             }
         );
     }
@@ -127,6 +129,21 @@ class EmpList extends Component {
                 });
             })
         });
+    }
+
+    showToastMsg = (type, msg, delayTime = 3000) => {
+        this.toastProps = {
+            showMsg: true,
+            type: type,
+            message: msg,
+            closeAction: () => {
+                this.toastProps.showMsg = false;
+                this.setState({showMsg : false});
+            }
+        }
+        setTimeout(() => {
+            this.toastProps.closeAction();
+        }, delayTime);
     }
 
     render() {
@@ -153,14 +170,15 @@ class EmpList extends Component {
         return <div>
             <h4 className="text-center"> List of Employees</h4>
             <div className="container">
+                <ToastMsg {...this.toastProps}></ToastMsg>
                 <div className="row"> 
                     <div className="col-sm">
-                        <NavLink to="/employees/add-edit-employee"> <button className="fa fa-plus">Add Employee </button></NavLink>
+                        <NavLink to="/employees/add-edit-employee"> <button className="fa fa-plus btn btn-primary"> Add Employee</button></NavLink>
                     </div>
                     <div className="col-sm">
                     {/*  Create new component */}
                         <input type="text" className="form-control" onChange={(event) => this.searchFilter(event.target.value)} 
-                            placeholder="Search here"/>
+                            placeholder="Search here"/> 
                     </div>
                 </div>
                 <br/>

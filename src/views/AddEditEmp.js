@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
+import ToastMsg from "../components/ToastMsg";
 
-// this can be functional component
 class AddEditEmp extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {  showMsg: false};
+    }
+
+    componentDidMount() {
+        this.getEmployeeDetails();
+    }
 
     employee = {
         name : '',
@@ -37,7 +46,7 @@ class AddEditEmp extends Component {
 
     onSubmitAction = () => {
         if(!this.employee.name.value) {
-            alert("Please Enter Name");
+            this.showToastMsg('danger', "Please Enter Name");
             return;
         } 
         let url = "http://localhost:4000/employees",
@@ -63,10 +72,12 @@ class AddEditEmp extends Component {
         .then(
           (result) => {
                 if(!this.props.match.params.empId) {
-                    alert("Added Succssfully");
-                    this.props.history.push('/employees');
+                    this.showToastMsg('success', "Added Succssfully!");
+                        setTimeout(() => {
+                            this.props.history.push('/employees');
+                        }, 3000);
                 } else {
-                    alert("Updated Succssfully");
+                    this.showToastMsg('success', "Updated Succssfully!");
                 }
           },
           (error) => {
@@ -74,13 +85,30 @@ class AddEditEmp extends Component {
           }
         )
     }
+    showToastMsg = (type, msg, delayTime = 3000) => {
+        this.toastProps = {
+            showMsg: true,
+            type: type,
+            message: msg,
+            closeAction: () => {
+                this.toastProps.showMsg = false;
+                this.setState({showMsg : false});
+            }
+            
+        }
+        this.setState({showMsg : true});
+        setTimeout(() => {
+            this.toastProps.closeAction();
+        }, delayTime);
+    }
 
     render(props) {
         console.log(props);
-        this.getEmployeeDetails();
         return <div>
              <h3 className="text-center">Add/Edit Employee </h3>
              <div className="container">
+                <ToastMsg {...this.toastProps}></ToastMsg>
+
                 <form>
                     {this.props.match.params.empId && <div className="form-group font-weight-bold">
                         <label>Id : {this.props.match.params.empId || 'New'} </label>

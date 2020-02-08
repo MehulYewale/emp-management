@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
+import AppInput from '../components/app.input';
 
 class AddEditEmp extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {  showMsg: false};
+        this.state = { 
+            showToastMsg: false,
+            employee : {
+                name : '',
+                address: '',
+                mobileNumber: '',
+                salary: ''
+            }
+         };
+        this.formSubmitted = false;
     }
-
+    
     componentDidMount() {
         this.getEmployeeDetails();
     }
 
-    employee = {
-        name : '',
-        address: '',
-        mobileNumber: '',
-        salary: ''
-    }
-
-    
     getEmployeeDetails() {
         if(!this.props.match.params.empId) {
             return;
@@ -31,11 +33,7 @@ class AddEditEmp extends Component {
         .then(
           (result) => {
               console.log("after get call",result);
-              this.employee.id = result.id;
-              this.employee.name.value = result.name;
-              this.employee.address.value = result.address;
-              this.employee.mobileNumber.value = result.mobileNumber;
-              this.employee.salary.value = result.salary;
+              this.setState({employee:result});
           },
           (error) => {
             
@@ -45,7 +43,9 @@ class AddEditEmp extends Component {
    
 
     onSubmitAction = () => {
-        if(!this.employee.name.value) {
+        this.formSubmitted = true; // for trigger inbuild html5 validation
+
+        if(!this.state.employee.name) { // custom validation on fields
             this.showToastMsg("Please Enter Name", 'danger');
             return;
         } 
@@ -62,10 +62,10 @@ class AddEditEmp extends Component {
                 'Content-Type': 'application/json',
               },
             body: JSON.stringify({
-                name : this.employee.name.value,
-                address: this.employee.address.value,
-                mobileNumber: this.employee.mobileNumber.value,
-                salary: this.employee.salary.value
+                name : this.state.employee.name,
+                address: this.state.employee.address,
+                mobileNumber: this.state.employee.mobileNumber,
+                salary: this.state.employee.salary
             })
         })
         .then(res => res.json())
@@ -85,13 +85,27 @@ class AddEditEmp extends Component {
           }
         )
     }
-    showToastMsg = (msg, type) => {
-        this.toastProps = {
-            showMsg: true,
-            msgType: type,
-            message: msg
-        }
-        this.setState({showMsg : true});
+    showToastMsg = (msg, type) =>  {
+        this.setState({showToastMsg: false}, // stop if it trigger again
+            () => {             // to make synchroneous while multiple click on same time.
+            this.toastProps = {
+                showMsg: true,
+                msgType: type,
+                message: msg,
+                callback: () => this.setState({showToastMsg: false})  //callback will trigger after closing 
+            }
+            this.setState({showToastMsg : true});    // to show msg 
+        });
+    }
+
+    employeeChangeHandler = (event) => {
+        const {name, value} = event.target;
+        this.setState((prevEmp) => ({
+            employee : {...prevEmp.employee, [name]:value}
+        }));
+        setTimeout(()=> {
+            console.log(this.state);
+        },3000)
     }
 
     render(props) {
@@ -99,15 +113,22 @@ class AddEditEmp extends Component {
         return <div>
              <h3 className="text-center">Add/Edit Employee </h3>
              <div className="container">
-                { this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
-                <form>
+                { this.state.showToastMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
+                {/* bootstrap html5 form validations will activate after submit by adding was-validated class */}
+                <form noValidate className={this.formSubmitted ? 'was-validated' : null}> 
                     {this.props.match.params.empId && <div className="form-group font-weight-bold">
                         <label>Id : {this.props.match.params.empId || 'New'} </label>
                     </div>}
-                    <div className="form-group">
+
+                    <AppInput label="Name * " name="name" onChange={this.employeeChangeHandler} value={this.state.employee.name} required></AppInput>
+                    <AppInput label="Address" name="address" onChange={this.employeeChangeHandler} value={this.state.employee.address} ></AppInput>
+                    <AppInput label="Mobile Number" name="mobileNumber" onChange={this.employeeChangeHandler} value={this.state.employee.mobileNumber} ></AppInput>
+                    <AppInput label="Salary" name="salary" onChange={this.employeeChangeHandler} value={this.state.employee.salary} ></AppInput>
+
+                    {/* <div className="form-group">
                         <label>Name *: </label>
                         <input type="text" ref={(input)=> this.employee.name = input} className="form-control" placeholder="Enter Name"/>
-                    </div>
+                    </div> 
                     <div className="form-group">
                         <label>Address : </label>
                         <input type="text" ref={(input)=> this.employee.address = input} className="form-control"  placeholder="Enter Address"/>
@@ -119,7 +140,7 @@ class AddEditEmp extends Component {
                     <div className="form-group">
                         <label>Salary : </label>
                         <input type="text" ref={(input)=> this.employee.salary = input} className="form-control" placeholder="Enter Salary"/>
-                    </div>
+                    </div> */}
                     <button type="button" onClick={this.onSubmitAction} className="btn btn-primary">Submit</button> &nbsp;
                     <NavLink to="/employees"><button type="button" className="btn btn-secondary">Back</button></NavLink>
                 </form>

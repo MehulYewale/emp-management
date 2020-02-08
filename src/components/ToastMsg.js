@@ -11,9 +11,13 @@ class ToastMsg extends Component {
 
     componentDidMount() {
         const delay = this.props.delayTime || 3000;
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
             this.closeMsg();
         }, delay);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
     }
 
     closeMsg() {

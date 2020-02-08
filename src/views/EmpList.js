@@ -138,7 +138,8 @@ class EmpList extends Component {
         this.toastProps = {
             showMsg: true,
             msgType,
-            message: msg
+            message: msg,
+            callback: () => this.setState({showMsg: false})
         }
     }
 

@@ -41,33 +41,25 @@ class ViewEmp extends Component {
         }).then(response => response.json())
         .then(
             (result) => {
-                this.showToastMsg('success', 'Deleted successfully!');
+                this.showToastMsg('Deleted successfully!', 'success');
                 setTimeout(() => {
                     this.props.history.push('/employees');
-                }, 3000);
+                }, 2000);
             },
             (error) => {
                 console.log(error);
-                this.showToastMsg('danger', 'Failed to delete!');
+                this.showToastMsg('Failed to delete!', 'danger');
             }
         );
     }
-    showToastMsg = (type, msg, delayTime = 3000) => {
+    showToastMsg = (msg, type, delayTime = 3000) => {
         this.toastProps = {
             showMsg: true,
-            type: type,
+            msgType: type,
             message: msg,
-            closeAction: () => {
-                this.toastProps.showMsg = false;
-                this.setState({showMsg : false});
-            }
-            
+            delayTime
         }
-        this.setState({showMsg : true});
-
-        setTimeout(() => {
-            this.toastProps.closeAction();
-        }, delayTime);
+        this.setState({showMsg: true});
     }
 
     render () {
@@ -75,7 +67,7 @@ class ViewEmp extends Component {
         return <div>
             <h3 className="text-center">View Employee </h3>
             <div className="container">
-                <ToastMsg {...this.toastProps}></ToastMsg>
+            { this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg> }
 
                 <div className="form-group row font-weight-bold">
                     <label>Id : </label>

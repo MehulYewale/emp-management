@@ -3,8 +3,12 @@ import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
 import AppInput from '../components/app.input';
 
+import ToastMsgContext from '../contexts/ToastMsgContext';
+import ToastMsgConsumer from '../contexts/ToastMsgConsumer';
+
+
 class AddEditEmp extends Component {
-    
+    static contextType = ToastMsgContext; // we can use useContext for functional comp
     constructor(props) {
         super(props);
         this.state = { 
@@ -86,16 +90,18 @@ class AddEditEmp extends Component {
         )
     }
     showToastMsg = (msg, type) =>  {
-        this.setState({showToastMsg: false}, // stop if it trigger again
-            () => {             // to make synchroneous while multiple click on same time.
+        // this.setState({showToastMsg: false}, // stop if it trigger again
+        //     () => {             // to make synchroneous while multiple click on same time.
             this.toastProps = {
-                showMsg: true,
+                // showMsg: true,
                 msgType: type,
-                message: msg,
-                callback: () => this.setState({showToastMsg: false})  //callback will trigger after closing 
+                message: msg
+                // callback: () => this.setState({showToastMsg: false})  //callback will trigger after closing 
             }
-            this.setState({showToastMsg : true});    // to show msg 
-        });
+        //     this.setState({showToastMsg : true});    // to show msg 
+        // });
+        console.dir(this.context);
+        this.context.toggleToastMsg(true);
     }
 
     employeeChangeHandler = (event) => {
@@ -113,7 +119,8 @@ class AddEditEmp extends Component {
         return <div>
              <h3 className="text-center">Add/Edit Employee </h3>
              <div className="container">
-                { this.state.showToastMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
+                <ToastMsgConsumer {...this.toastProps}></ToastMsgConsumer>
+                {/* { this.state.showToastMsg && <ToastMsg {...this.toastProps}></ToastMsg>} */}
                 {/* bootstrap html5 form validations will activate after submit by adding was-validated class */}
                 <form noValidate className={this.formSubmitted ? 'was-validated' : null}> 
                     {this.props.match.params.empId && <div className="form-group font-weight-bold">

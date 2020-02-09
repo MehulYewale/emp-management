@@ -1,10 +1,13 @@
 import React, {Component}from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
+import ToastMsgContext from '../contexts/ToastMsgContext';
+import ToastMsgConsumer from '../contexts/ToastMsgConsumer';
 
 class ViewEmp extends Component {
 
     employee = { };
+    static contextType = ToastMsgContext;
     constructor(props) {
         super(props);
           this.state = { 
@@ -54,12 +57,13 @@ class ViewEmp extends Component {
     }
     showToastMsg = (msg, type, delayTime = 3000) => {
         this.toastProps = {
-            showMsg: true,
+            // showMsg: true,
             msgType: type,
             message: msg,
             delayTime
         }
-        this.setState({showMsg: true});
+        // this.setState({showMsg: true});
+        this.context.toggleToastMsg(true);
     }
 
     render () {
@@ -67,7 +71,9 @@ class ViewEmp extends Component {
         return <div>
             <h3 className="text-center">View Employee </h3>
             <div className="container">
-            { this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg> }
+            <ToastMsgConsumer {...this.toastProps}></ToastMsgConsumer>
+
+            {/* { this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg> } */}
 
                 <div className="form-group row font-weight-bold">
                     <label>Id : </label>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
+import ToastMsgContext from '../contexts/ToastMsgContext';
+import ToastMsgConsumer from '../contexts/ToastMsgConsumer';
 
 const empColumn = (value, classes, index) => (
     <div className="col-sm font-weight-bold" key={index.toString()}>
@@ -52,6 +54,7 @@ const EmpTableRows = (props) => {
 
 class EmpList extends Component {
 
+    static contextType = ToastMsgContext;
     list = [];
     constructor(props) {
         super(props);
@@ -136,11 +139,12 @@ class EmpList extends Component {
 
     showToastMsg = (msg, msgType) => {
         this.toastProps = {
-            showMsg: true,
+            // showMsg: true,
             msgType,
             message: msg,
-            callback: () => this.setState({showMsg: false})
+            // callback: () => this.setState({showMsg: false})
         }
+        this.context.toggleToastMsg(true);
     }
 
     render() {
@@ -167,7 +171,8 @@ class EmpList extends Component {
         return <div>
             <h4 className="text-center"> List of Employees</h4>
             <div className="container">
-                {this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg>}
+                <ToastMsgConsumer {...this.toastProps}></ToastMsgConsumer>
+                {/* {this.state.showMsg && <ToastMsg {...this.toastProps}></ToastMsg>} */}
                 <div className="row"> 
                     <div className="col-sm">
                         <NavLink to="/employees/add-edit-employee"> <button className="fa fa-plus btn btn-primary"> Add Employee</button></NavLink>

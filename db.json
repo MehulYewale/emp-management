@@ -1,9 +1,4 @@
 {
-  "titleChange": {
-    "newtitle": "This is new title",
-    "ageTrack": false,
-    "name": "Raj"
-  },
   "employees": [
     {
       "name": "MEHUL YEWALE",
@@ -60,20 +55,6 @@
       "mobileNumber": "dfsdf",
       "salary": "dsdfsd",
       "id": 17
-    },
-    {
-      "name": "sadasdsad",
-      "address": "sfffwrqr",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 18
-    },
-    {
-      "name": "safassada",
-      "address": "",
-      "mobileNumber": "",
-      "salary": "",
-      "id": 19
     }
   ]
 }

@@ -9,5 +9,10 @@ search, view
 Add/Edit/Delete
 
  creatte release tag while committing
+
+ https://my-json-server.typicode.com/
+ https://jsonplaceholder.typicode.com/
+
+ https://www.heroku.com/
  
 

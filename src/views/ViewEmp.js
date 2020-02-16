@@ -1,6 +1,7 @@
 import React, {Component}from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
+import EmployeeService from '../service/employee.service';
 
 class ViewEmp extends Component {
 
@@ -18,9 +19,7 @@ class ViewEmp extends Component {
         if(!this.props.match.params.empId) { // we can create variable and us followed places
             return;
         }
-        const getURL = 'http://localhost:4000/employees/' + this.props.match.params.empId;
-        fetch(getURL)
-        .then(res => res.json())
+        EmployeeService.getEmployee(this.props.match.params.empId)
         .then(
             (result) => {
                 this.employee = result;
@@ -33,12 +32,7 @@ class ViewEmp extends Component {
         )
     }
     deleteEmployee = () => {
-        fetch("http://localhost:4000/employees/" + this.props.match.params.empId, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(response => response.json())
+        EmployeeService.deleteEmployee(this.props.match.params.empId)
         .then(
             (result) => {
                 this.showToastMsg('Deleted successfully!', 'success');

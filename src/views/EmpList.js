@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
+import EmployeeService from '../service/employee.service';
 
 const empColumn = (value, classes, index) => (
     <div className="col-sm font-weight-bold" key={index.toString()}>
@@ -67,8 +68,7 @@ class EmpList extends Component {
     }
     
     componentDidMount() {
-        fetch("http://localhost:4000/employees")
-          .then(res => res.json())
+        EmployeeService.getEmployees()
           .then(
             (result) => {
               this.list = [...result];
@@ -101,12 +101,7 @@ class EmpList extends Component {
     }
 
     deleteEmployee = (id) => {
-       fetch("http://localhost:4000/employees/" + id, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(response => response.json())
+       EmployeeService.deleteEmployee(id)
         .then(
             (result) => {
                 this.showToastMsg('Deleted successfully!', 'success');

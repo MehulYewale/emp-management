@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import ToastMsg from "../components/ToastMsg";
 import AppInput from '../components/app.input';
+import EmployeeService from '../service/employee.service';
 
 class AddEditEmp extends Component {
     
@@ -49,26 +50,15 @@ class AddEditEmp extends Component {
             this.showToastMsg("Please Enter Name", 'danger');
             return;
         } 
-        let url = "http://localhost:4000/employees",
-            method = "POST";
-        if(this.props.match.params.empId) {
-            url = url +  "/" + this.props.match.params.empId;
-            method = "PUT";
-        }
-        fetch(url, {
-            method: method,
-            // mode: 'cors',
-            headers:{
-                'Content-Type': 'application/json',
-              },
-            body: JSON.stringify({
+        const method = this.props.match.params.empId ? 'PUT' : 'POST',
+            data = JSON.stringify({
                 name : this.state.employee.name,
                 address: this.state.employee.address,
                 mobileNumber: this.state.employee.mobileNumber,
                 salary: this.state.employee.salary
-            })
-        })
-        .then(res => res.json())
+            });
+
+        EmployeeService.addUpdateEmp(method, data, this.props.match.params.empId)
         .then(
           (result) => {
                 if(!this.props.match.params.empId) {
